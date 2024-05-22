@@ -6,7 +6,7 @@ from nss_handler import HandleRequests, status
 # Add your imports below this line
 from views import list_docks, retrieve_dock, delete_dock, update_dock
 from views import list_haulers, retrieve_hauler, delete_hauler, update_hauler
-from views import list_ships, retrieve_ship, delete_ship, update_ship
+from views import list_ships, retrieve_ship, delete_ship, update_ship, make_ship
 
 
 class JSONServer(HandleRequests):
@@ -112,8 +112,36 @@ class JSONServer(HandleRequests):
 
     def do_POST(self):
         """Handle POST requests from a client"""
+        url = self.parse_url(self.path)
+        pk = url["pk"]
+        
+        content_len = int(self.headers.get('content-length', 0))
+        request_body = self.rfile.read(content_len)
+        request_body = json.loads(request_body)
 
-        pass
+        if url["requested_resource"] == "ships":
+        # Call the function to create a new ship
+            new_ship_id = make_ship(request_body)  # Pass the primary key as an argument
+            if new_ship_id:
+            # Return the newly created ship's ID
+                return self.response(json.dumps({"id": new_ship_id}), status.HTTP_201_SUCCESS_CREATED.value)
+
+        elif url["requested_resource"] == "docks":
+        # Call the function to create a new dock
+            new_dock_id = create_dock(pk, request_body)  # Pass the primary key as an argument
+            if new_dock_id:
+            # Return the newly created dock's ID
+                return self.response(json.dumps({"id": new_dock_id}), status.HTTP_201_SUCCESS_CREATED.value)
+
+        elif url["requested_resource"] == "haulers":
+        # Call the function to create a new hauler
+            new_hauler_id = create_hauler(pk, request_body)  # Pass the primary key as an argument
+            if new_hauler_id:
+            # Return the newly created hauler's ID
+                return self.response(json.dumps({"id": new_hauler_id}), status.HTTP_201_SUCCESS_CREATED.value)
+
+    # If the requested resource is not found or creation fails
+        return self.response("Failed to create resource", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
 
 
 

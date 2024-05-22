@@ -83,3 +83,23 @@ def retrieve_ship(pk):
         serialized_ship = json.dumps(dictionary_version_of_object)
 
     return serialized_ship
+
+def make_ship(ship_data):
+    # Open a connection to the database
+    with sqlite3.connect("./shipping.db") as conn:
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to insert ship data into the Ship table
+        db_cursor.execute(
+            """
+            INSERT INTO Ship (name, hauler_id)
+            VALUES (?, ?)
+            """,
+            (ship_data['name'], ship_data['hauler_id'])
+        )
+
+        # Get the ID of the newly inserted ship
+        new_ship_id = db_cursor.lastrowid
+
+    # Return the ID of the newly created ship
+    return new_ship_id
