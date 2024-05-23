@@ -89,10 +89,10 @@ def make_dock(dock_data):
         # Write the SQL query to insert ship data into the Ship table
         db_cursor.execute(
             """
-            INSERT INTO Dock (name, capacity)
+            INSERT INTO Dock (location, capacity)
             VALUES (?, ?)
             """,
-            (dock_data['name'], dock_data['capacity'])
+            (dock_data['location'], dock_data['capacity'])
         )
 
         # Get the ID of the newly inserted ship
