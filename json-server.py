@@ -4,8 +4,8 @@ from nss_handler import HandleRequests, status
 
 
 # Add your imports below this line
-from views import list_docks, retrieve_dock, delete_dock, update_dock
-from views import list_haulers, retrieve_hauler, delete_hauler, update_hauler
+from views import list_docks, retrieve_dock, delete_dock, update_dock, make_dock
+from views import list_haulers, retrieve_hauler, delete_hauler, update_hauler, make_hauler
 from views import list_ships, retrieve_ship, delete_ship, update_ship, make_ship
 
 
@@ -128,14 +128,14 @@ class JSONServer(HandleRequests):
 
         elif url["requested_resource"] == "docks":
         # Call the function to create a new dock
-            new_dock_id = create_dock(pk, request_body)  # Pass the primary key as an argument
+            new_dock_id = make_dock(request_body)  # Pass the primary key as an argument
             if new_dock_id:
             # Return the newly created dock's ID
                 return self.response(json.dumps({"id": new_dock_id}), status.HTTP_201_SUCCESS_CREATED.value)
 
         elif url["requested_resource"] == "haulers":
         # Call the function to create a new hauler
-            new_hauler_id = create_hauler(pk, request_body)  # Pass the primary key as an argument
+            new_hauler_id = make_hauler(request_body)  # Pass the primary key as an argument
             if new_hauler_id:
             # Return the newly created hauler's ID
                 return self.response(json.dumps({"id": new_hauler_id}), status.HTTP_201_SUCCESS_CREATED.value)

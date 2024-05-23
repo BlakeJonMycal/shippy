@@ -83,3 +83,23 @@ def retrieve_hauler(pk):
         serialized_hauler = json.dumps(dict(query_results))
 
     return serialized_hauler
+
+def make_hauler(hauler_data):
+    # Open a connection to the database
+    with sqlite3.connect("./shipping.db") as conn:
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to insert ship data into the Ship table
+        db_cursor.execute(
+            """
+            INSERT INTO Hauler (name, dock_id)
+            VALUES (?, ?)
+            """,
+            (hauler_data['name'], hauler_data['dock_id'])
+        )
+
+        # Get the ID of the newly inserted ship
+        new_hauler_id = db_cursor.lastrowid
+
+    # Return the ID of the newly created ship
+    return new_hauler_id

@@ -3,76 +3,100 @@ title Shipping Ships API
 participant Client
 participant Python
 participant JSONServer
+participant view.py
 participant Database
 Client->>Python:GET request to "/ships"
 Python->>JSONServer:Run do_GET() method
-JSONServer ->> Database:Ask ships table for all ships
-Database -->> JSONServer: Returns list of ships
-JSONServer-->>Client: Here's all yer ships (in JSON format)
+JSONServer ->> view.py: invoke retrieve_ship function and then list_ship function once ships are retrived
+view.py ->> Database:Ask ships table for all ships
+Database -->> view.py: Returns data
+view.py -->> JSONServer: returns serialized ship
+JSONServer-->>Client: Here's all yer ships (in JSON format) & success message
 
 Client->>Python:GET request to "/haulers"
 Python->>JSONServer:Run do_GET() method
-JSONServer ->> Database:Ask haulers table for all haulers
-Database -->> JSONServer: Returns list of haulers
-JSONServer-->>Client: Here's all yer haulers (in JSON format)
+JSONServer ->> view.py: invoke retrieve_hauler function and then list_hauler function once haulers are retrived
+view.py ->> Database:Ask haulers table for all haulers
+Database -->> view.py: Returns data
+view.py -->> JSONServer: returns serialized hauler
+JSONServer-->>Client: Here's all yer haulers (in JSON format) & success message
 
 Client->>Python:GET request to "/docks"
 Python->>JSONServer:Run do_GET() method
-JSONServer ->> Database:Ask docks table for all docks
-Database -->> JSONServer: Returns list of docks
-JSONServer-->>Client: Here's all yer docks (in JSON format)
+JSONServer ->> view.py: invoke retrieve_dock function and then list_dock function once docks are retrived
+view.py ->> Database:Ask docks table for all docks
+Database -->> view.py: Returns serialized dock
+view.py -->> JSONServer: success message
+JSONServer-->>Client: Here's all yer docks (in JSON format) & success message
 
 Client->>Python: PUT request to "/ships/id"
 Python->>JSONServer: Run do_PUT() method
-JSONServer ->> Database: Update ship information in ships table
-Database -->> JSONServer: Confirms successful update
-JSONServer-->>Client: Ship information updated successfully
+JSONServer ->> view.py: invoke update_ship function
+view.py ->> Database: Update ship information in ships table
+Database -->> view.py: returns data
+view.py -->> JSONServer: returns True
+JSONServer-->>Client: Ship information updated & success message
 
 Client->>Python: PUT request to "/haulers/id"
 Python->>JSONServer: Run do_PUT() method
-JSONServer ->> Database: Update hauler information in haulers table
-Database -->> JSONServer: Confirms successful update w/ message
-JSONServer-->>Client: hauler information updated successfully
+JSONServer ->> view.py: invoke update_hauler function
+view.py ->> Database: Update hauler information in haulers table
+Database -->> view.py: returns data
+view.py -->> JSONServer: Returns True
+JSONServer-->>Client: hauler information updated & success message
 
 Client->>Python: PUT request to "/docks/id"
 Python->>JSONServer: Run do_PUT() method
-JSONServer ->> Database: Update dock information in docks table
-Database -->> JSONServer: Confirms successful update w/ message
-JSONServer-->>Client: dock information updated successfully
+JSONServer ->> view.py: invoke update_dock function
+view.py ->> Database: Update dock information in docks table
+Database -->> view.py: returns data
+view.py -->> JSONServer: Returns True
+JSONServer-->>Client: dock information updated & success message
 
 Client->>Python:POST request to "/ships"
 Python->>JSONServer:Run do_POST() method
-JSONServer ->> Database:Insert new ship data into ships table
-Database -->> JSONServer: Returns confirmation of successful insertion
-JSONServer-->>Client: Confirmation of successful ship insertion
+JSONServer ->> view.py: invoke make_ship function
+view.py ->> Database:Insert new ship data into ships table
+Database -->> view.py: returns data
+view.py -->> JSONServer: returns new ship by id
+JSONServer-->>Client: New ship & confirmation of successful ship insertion
 
 Client->>Python:POST request to "/haulers"
 Python->>JSONServer:Run do_POST() method
-JSONServer ->> Database:Insert new hauler data into haulers table
-Database -->> JSONServer: Returns confirmation of successful insertion
-JSONServer-->>Client: Confirmation of successful hauler insertion
+JSONServer ->> view.py: invoke make_hauler function
+view.py ->> Database:Insert new hauler data into haulers table
+Database -->> view.py: returns data
+view.py -->> JSONServer: returns new hauler by id
+JSONServer-->>Client: New hauler & confirmation of successful hauler insertion
 
 Client->>Python:POST request to "/docks"
 Python->>JSONServer:Run do_POST() method
-JSONServer ->> Database:Insert new dock data into docks table
-Database -->> JSONServer: Returns confirmation of successful insertion
-JSONServer-->>Client: Confirmation of successful dock insertion
+JSONServer ->> view.py: invoke make_dock function
+view.py ->> Database:Insert new dock data into dock table
+Database -->> view.py: returns data
+view.py -->> JSONServer: returns new dock by id
+JSONServer-->>Client: new dock & confirmation of successful dock insertion
 
 Client->>Python:DELETE request to "/ships/id"
 Python->>JSONServer:Run do_DELETE() method
-JSONServer ->> Database:Delete ship with specified ID from ships table
-Database -->> JSONServer: Returns confirmation of successful deletion
-JSONServer-->>Client: Confirmation of successful ship deletion
+JSONServer ->> view.py: invoke delete_ship function
+view.py ->> Database:Delete ship with specified ID from ships table
+Database -->> view.py: Returns data
+view.py -->> JSONServer: returns true
+JSONServer-->>Client: updated data & confirmation of successful ship deletion
 
 Client->>Python:DELETE request to "/haulers/id"
 Python->>JSONServer:Run do_DELETE() method
-JSONServer ->> Database:Delete hauler with specified ID from hauler table
-Database -->> JSONServer: Returns confirmation of successful deletion
-JSONServer-->>Client: Confirmation of successful hauler deletion
+JSONServer ->> view.py: invoke delete_hauler function
+view.py ->> Database:Delete hauler with specified ID from haulers table
+Database -->> view.py: Returns data
+view.py -->> JSONServer: returns true
+JSONServer-->>Client: Updated data & confirmation of successful hauler deletion
 
 Client->>Python:DELETE request to "/docks/id"
 Python->>JSONServer:Run do_DELETE() method
-JSONServer ->> Database:Delete dock with specified ID from docks table
-Database -->> JSONServer: Returns confirmation of successful deletion
-JSONServer-->>Client: Confirmation of successful dock deletion
-
+JSONServer ->> view.py: invoke delete_dock function
+view.py ->> Database:Delete dock with specified ID from docks table
+Database -->> view.py: Returns data
+view.py -->> JSONServer: returns true
+JSONServer-->>Client: Updated Data & confirmation of successful dock deletion
